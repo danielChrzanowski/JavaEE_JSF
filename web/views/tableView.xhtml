@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                template="./../template/masterTemplate.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <div class="table-responsive">
+
+            <h:outputText value="#{msgs.databaseAjax}"/>
+            <h:form>
+                <h:dataTable value="#{newJSFManagedBeanSession.uzytkownikTOList}" var="uzytkownikTOList" style="font-size: 12px;" bgcolor="LightGray" border="3" 
+                             cellspacing="2" rows="0" captionClass="warningMessage" footerClass="errorMessage" rowClasses="oddRow,evenRow">
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="#{msgs.identifier}"/></f:facet>
+                        <h:outputText value="#{uzytkownikTOList.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="#{msgs.lastName}"/>
+                            <h:commandButton id="sortDown" value="&dArr;">
+                                <f:ajax listener="#{newJSFManagedBeanSession.sort('asc')}" render="@form"/>
+                            </h:commandButton>
+                            <h:commandButton id="sortUp" value="&uArr;">
+                                <f:ajax listener="#{newJSFManagedBeanSession.sort('desc')}" render="@form"/>
+                            </h:commandButton>
+                        </f:facet>
+                        <h:inputText value="#{uzytkownikTOList.nazwisko}" rendered="#{uzytkownikTOList.edited}"/>
+                        <h:outputText value="#{uzytkownikTOList.nazwisko}" rendered="#{not uzytkownikTOList.edited}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="#{msgs.name}"/></f:facet>
+                        <h:inputText value="#{uzytkownikTOList.imie}" rendered="#{uzytkownikTOList.edited}"/>
+                        <h:outputText value="#{uzytkownikTOList.imie}" rendered="#{not uzytkownikTOList.edited}"/>
+                    </h:column>              
+                    <h:column id="kolOperacja">
+                        <f:facet name="header"><h:outputText value="#{msgs.operation}"/></f:facet>
+                        <h:selectBooleanCheckbox id="editCheckBox" value="#{uzytkownikTOList.edited}" rendered="true">
+                            <f:ajax listener="#{newJSFManagedBeanSession.visibleChange(uzytkownikTOList)}" execute="@form" render="@form"/>
+                        </h:selectBooleanCheckbox>
+
+                        <h:commandButton id="addRow" value="+">
+                            <f:ajax listener="#{newJSFManagedBeanSession.addRow(uzytkownikTOList)}" execute="@form" render="@form"/>
+                        </h:commandButton>
+                        <h:commandButton id="delRow" value="-">
+                            <f:ajax listener="#{newJSFManagedBeanSession.delRow(uzytkownikTOList)}" execute="@form" render="@form"/>
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+                <h:commandButton value="#{msgs.refreshData}" action="#{newJSFManagedBeanSession.refreshData()}">
+                    <f:ajax listener="#{newJSFManagedBeanSession.refreshData()}" render="@form"/>
+                </h:commandButton>
+            </h:form>
+        </div>
+
+        <h:outputText value="&lt;br/&gt;" escape="false" />
+
+        <h:outputText value="#{msgs.collection}"/>
+        <h:form>
+            <h:dataTable value="#{newJSFManagedBeanView.carList}" var="carList" style="font-size: 12px;" bgcolor="LightGray" border="3" cellspacing="2">
+                <h:column>
+                    <h:outputText value="#{carList.id}"/>
+                </h:column>
+                <h:column>
+                    <h:inputText value="#{carList.brand}" rendered="#{carList.edited}"/>
+                    <h:outputText value="#{carList.brand}" rendered="#{not carList.edited}"/>
+                </h:column>
+                <h:column>
+                    <h:inputText value="#{carList.model}" rendered="#{carList.edited}"/>
+                    <h:outputText value="#{carList.model}" rendered="#{not carList.edited}"/>
+                </h:column>      
+                <h:column>
+                    <h:inputText value="#{carList.wheelSize}" rendered="#{carList.edited}"/>
+                    <h:outputText value="#{carList.wheelSize}" rendered="#{not carList.edited}"/>
+                </h:column>
+                <h:column id="kolOperacja">
+                    <f:facet name="header"><h:outputText value="#{msgs.operation}"/></f:facet>
+                    <h:selectBooleanCheckbox id="editCheckBox" value="#{carList.edited}" rendered="true" onclick="submit()"/>
+                    <h:commandButton id="addCarRow" value="#{msgs.add}" action="#{newJSFManagedBeanView.addCarRow(carList)}"/>
+                    <h:commandButton id="delCarRow" value="#{msgs.delete}" action="#{newJSFManagedBeanView.delCarRow(carList)}"/>
+                    <h:commandButton id="modifyCarRow" value="#{msgs.modify}" action="#{newJSFManagedBeanView.modifyCarRow(carList)}"/>
+                </h:column>
+            </h:dataTable>
+            <h:commandButton value="#{msgs.readData}" action="#{newJSFManagedBeanView.refreshCarData()}"/>
+            <h:commandButton value="#{msgs.saveData}" action="#{newJSFManagedBeanView.saveCarData()}"/> 
+            <h:commandButton value="#{msgs.goOnlyStudents}" action="goStudentsView"/>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
